@@ -9,7 +9,8 @@
     <color name="black">#000000</color>
     <color name="black2">#E2000000</color>
     <color name="gray_line">#EBEBEB</color>
-
+    <color name="yellow">#E7C61A</color>
+    <color name="gray_text">#8F8F8F</color>
 
 
 </resources>

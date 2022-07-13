@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg"
+    android:orientation="vertical"
+    tools:context=".FormWall">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="23dp">
+
+        <ImageView
+            android:layout_width="72dp"
+            android:layout_height="80dp"
+            android:background="@drawable/icon_wall" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="17dp"
+            android:fontFamily="@font/regular"
+            android:text="Parede 1"
+            android:textColor="@color/black"
+            android:textSize="25sp" />
+
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/bg_form"
+        android:padding="20dp">
+
+        <TextView
+            android:id="@+id/text_altura"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="17dp"
+            android:fontFamily="@font/regular"
+            android:text="Altura"
+            android:textColor="@color/black"
+            android:textSize="20sp" />
+
+        <EditText
+            android:id="@+id/edit_altura"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/text_altura"
+            android:inputType="numberDecimal"
+
+            />
+
+        <TextView
+            android:id="@+id/text_largura"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/edit_altura"
+            android:layout_marginTop="25dp"
+            android:fontFamily="@font/regular"
+            android:text="Largura"
+            android:textColor="@color/black"
+            android:textSize="20sp" />
+
+        <EditText
+            android:id="@+id/edit_largura"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/text_largura"
+            android:inputType="numberDecimal" />
+
+        <TextView
+            android:id="@+id/text_janelas"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/edit_largura"
+            android:layout_marginTop="25dp"
+            android:fontFamily="@font/regular"
+            android:text="Janelas"
+            android:textColor="@color/black"
+            android:textSize="20sp" />
+
+        <EditText
+            android:id="@+id/edit_janelas"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/text_janelas"
+            android:inputType="numberDecimal"
+
+            />
+
+
+        <TextView
+            android:id="@+id/text_portas"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/edit_janelas"
+            android:layout_marginTop="25dp"
+            android:fontFamily="@font/regular"
+            android:text="Portas"
+            android:textColor="@color/black"
+            android:textSize="20sp" />
+
+        <EditText
+            android:id="@+id/edit_portas"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/text_portas"
+            android:inputType="numberDecimal"
+
+            />
+
+        <Button
+            android:id="@+id/button_add"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/edit_portas"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/round_button"
+            android:gravity="center"
+            android:text="ADICIONAR"
+            android:textSize="25sp"
+            android:visibility="visible" />
+
+        <Button
+            android:id="@+id/button_return"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/button_add"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/button_return"
+            android:fontFamily="@font/black"
+            android:gravity="center"
+            android:text="VOLTAR"
+            android:textColor="@color/gray_text"
+            android:textSize="25sp"
+            android:visibility="visible"
+
+            />
+
+    </RelativeLayout>
+
+</LinearLayout>
