@@ -1,4 +1,4 @@
-package com.narciso.appcalcink;
+package com.narciso.appcalcink.model;
 
 public class Wall {
     private Double altura;

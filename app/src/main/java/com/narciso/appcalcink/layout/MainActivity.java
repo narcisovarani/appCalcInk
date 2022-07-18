@@ -1,15 +1,24 @@
-package com.narciso.appcalcink;
+package com.narciso.appcalcink.layout;
 
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.gson.Gson;
+import com.narciso.appcalcink.R;
+import com.narciso.appcalcink.data.Data;
+import com.narciso.appcalcink.model.Wall;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     ViewHolder mViewHolder = new ViewHolder();
+    private Data mData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -17,10 +26,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         setContentView(R.layout.activity_main);
 
-        mViewHolder.room.init();
+        this.mData = new Data(this);
+
+        this.mData.setNumWalls("0");
+
         this.mViewHolder.layout_empty = findViewById(R.id.layout_empty);
         this.mViewHolder.layout_room = findViewById(R.id.layout_room);
         this.mViewHolder.button_add = findViewById(R.id.button_add);
+        this.mViewHolder.button_calc = findViewById(R.id.button_calc);
 
         // PAREDE 1
         this.mViewHolder.layout_wall1 = findViewById(R.id.layout_wall1);
@@ -60,31 +73,56 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
         this.mViewHolder.button_add.setOnClickListener(this);
+        this.mViewHolder.button_calc.setOnClickListener(this);
         this.mViewHolder.layout_wall1_header.setOnClickListener(this);
+        this.mViewHolder.layout_wall2_header.setOnClickListener(this);
+        this.mViewHolder.layout_wall3_header.setOnClickListener(this);
+        this.mViewHolder.layout_wall4_header.setOnClickListener(this);
 
-        this.mViewHolder.room.getWall(0).setAltura(50.00);
-        this.mViewHolder.layout_wall1_altura.setText(this.mViewHolder.room.getWall(0).getAltura().toString());
+
+//        this.mViewHolder.room.getWall(0).setAltura(50.00);
+//        this.mViewHolder.layout_wall1_altura.setText(this.mViewHolder.room.getWall(0).getAltura().toString());
 
     }
 
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.button_add) {
-            this.mViewHolder.layout_empty.setVisibility(View.GONE);
-            this.mViewHolder.layout_room.setVisibility(View.VISIBLE);
-            this.mViewHolder.layout_wall1.setVisibility(View.VISIBLE);
+            Intent add = new Intent(this, FormWall.class);
+            startActivityForResult(add, 37);
+
         } else if (v.getId() == R.id.layout_wall1_header) {
             this.mViewHolder.layout_wall1_info.setVisibility(View.VISIBLE);
         }
 
     }
 
+    public void onActivityResult (int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == 37){
+            if (resultCode == Activity.RESULT_OK){
+                Toast.makeText(this, "Ok", Toast.LENGTH_LONG).show();
+                Gson gson = new Gson();
+
+                Wall parede_1 = gson.fromJson(this.mData.getStoreString("Wall_0"), Wall.class);
+
+                parede_1.getAltura();
+                parede_1.getLargura();
+
+            }
+            else if (resultCode == Activity.RESULT_CANCELED){
+                Toast.makeText(this, "CANCELOU", Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
     private static class ViewHolder {
-        Room room = new Room();
 
         RelativeLayout layout_empty;
         RelativeLayout layout_room;
         Button button_add;
+        Button button_calc;
 
         RelativeLayout layout_wall1;
         RelativeLayout layout_wall1_header;
