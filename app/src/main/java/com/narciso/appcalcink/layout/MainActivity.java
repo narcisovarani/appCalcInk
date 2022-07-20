@@ -28,7 +28,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         this.mData = new Data(this);
 
-        this.mData.setNumWalls("0");
+        if (this.mData.getNumWalls().isEmpty())
+            this.mData.setNumWalls("0");
 
         this.mViewHolder.layout_empty = findViewById(R.id.layout_empty);
         this.mViewHolder.layout_room = findViewById(R.id.layout_room);
@@ -79,7 +80,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         this.mViewHolder.layout_wall3_header.setOnClickListener(this);
         this.mViewHolder.layout_wall4_header.setOnClickListener(this);
 
-
+        showWall();
 //        this.mViewHolder.room.getWall(0).setAltura(50.00);
 //        this.mViewHolder.layout_wall1_altura.setText(this.mViewHolder.room.getWall(0).getAltura().toString());
 
@@ -92,28 +93,110 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             startActivityForResult(add, 37);
 
         } else if (v.getId() == R.id.layout_wall1_header) {
-            this.mViewHolder.layout_wall1_info.setVisibility(View.VISIBLE);
+            if (this.mViewHolder.layout_wall1_info.getVisibility() == View.VISIBLE){
+                this.mViewHolder.layout_wall1_info.setVisibility(View.GONE);
+            } else {
+                this.mViewHolder.layout_wall1_info.setVisibility(View.VISIBLE);
+                this.mViewHolder.layout_wall2_info.setVisibility(View.GONE);
+                this.mViewHolder.layout_wall3_info.setVisibility(View.GONE);
+                this.mViewHolder.layout_wall4_info.setVisibility(View.GONE);
+
+            }
+        } else if (v.getId() == R.id.layout_wall2_header) {
+            if (this.mViewHolder.layout_wall2_info.getVisibility() == View.VISIBLE){
+                this.mViewHolder.layout_wall2_info.setVisibility(View.GONE);
+            } else {
+                this.mViewHolder.layout_wall2_info.setVisibility(View.VISIBLE);
+                this.mViewHolder.layout_wall1_info.setVisibility(View.GONE);
+                this.mViewHolder.layout_wall3_info.setVisibility(View.GONE);
+                this.mViewHolder.layout_wall4_info.setVisibility(View.GONE);
+            }
+        }
+        else if (v.getId() == R.id.layout_wall3_header) {
+            if (this.mViewHolder.layout_wall3_info.getVisibility() == View.VISIBLE){
+                this.mViewHolder.layout_wall3_info.setVisibility(View.GONE);
+            } else {
+                this.mViewHolder.layout_wall3_info.setVisibility(View.VISIBLE);
+                this.mViewHolder.layout_wall2_info.setVisibility(View.GONE);
+                this.mViewHolder.layout_wall1_info.setVisibility(View.GONE);
+                this.mViewHolder.layout_wall4_info.setVisibility(View.GONE);
+            }
+        }
+        else if (v.getId() == R.id.layout_wall4_header) {
+            if (this.mViewHolder.layout_wall4_info.getVisibility() == View.VISIBLE){
+                this.mViewHolder.layout_wall4_info.setVisibility(View.GONE);
+            } else {
+                this.mViewHolder.layout_wall4_info.setVisibility(View.VISIBLE);
+                this.mViewHolder.layout_wall2_info.setVisibility(View.GONE);
+                this.mViewHolder.layout_wall3_info.setVisibility(View.GONE);
+                this.mViewHolder.layout_wall1_info.setVisibility(View.GONE);
+            }
         }
 
     }
 
-    public void onActivityResult (int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == 37){
-            if (resultCode == Activity.RESULT_OK){
-                Toast.makeText(this, "Ok", Toast.LENGTH_LONG).show();
-                Gson gson = new Gson();
+        if (requestCode == 37) {
+            if (resultCode == Activity.RESULT_OK) {
+                Toast.makeText(this, "Parede Adicionada", Toast.LENGTH_LONG).show();
 
-                Wall parede_1 = gson.fromJson(this.mData.getStoreString("Wall_0"), Wall.class);
-
-                parede_1.getAltura();
-                parede_1.getLargura();
-
-            }
-            else if (resultCode == Activity.RESULT_CANCELED){
+                showWall();
+            } else if (resultCode == Activity.RESULT_CANCELED) {
                 Toast.makeText(this, "CANCELOU", Toast.LENGTH_LONG).show();
             }
+        }
+    }
+
+
+
+    private void showWall() {
+        Gson gson = new Gson();
+
+        Wall parede_1 = gson.fromJson(this.mData.getStoreString("Wall_0"), Wall.class);
+        Wall parede_2 = gson.fromJson(this.mData.getStoreString("Wall_1"), Wall.class);
+        Wall parede_3 = gson.fromJson(this.mData.getStoreString("Wall_2"), Wall.class);
+        Wall parede_4 = gson.fromJson(this.mData.getStoreString("Wall_3"), Wall.class);
+
+        mViewHolder.layout_empty.setVisibility(View.VISIBLE);
+        mViewHolder.layout_room.setVisibility(View.VISIBLE);
+
+        if (parede_1 != null) {
+            this.mViewHolder.layout_wall1_altura.setText(String.valueOf(parede_1.getAltura()));
+            this.mViewHolder.layout_wall1_largura.setText(String.valueOf(parede_1.getLargura()));
+            this.mViewHolder.layout_wall1_janelas.setText(String.valueOf(parede_1.getJanelas()));
+            this.mViewHolder.layout_wall1_portas.setText(String.valueOf(parede_1.getPortas()));
+            mViewHolder.layout_wall1.setVisibility(View.VISIBLE);
+            mViewHolder.layout_empty.setVisibility(View.GONE);
+        } else {
+            mViewHolder.layout_wall1.setVisibility(View.GONE);
+        }
+
+        if (parede_2 != null) {
+            mViewHolder.layout_wall2.setVisibility(View.VISIBLE);
+            this.mViewHolder.layout_wall2_altura.setText(String.valueOf(parede_2.getAltura()));
+            this.mViewHolder.layout_wall2_largura.setText(String.valueOf(parede_2.getLargura()));
+            this.mViewHolder.layout_wall2_janelas.setText(String.valueOf(parede_2.getJanelas()));
+            this.mViewHolder.layout_wall2_portas.setText(String.valueOf(parede_2.getPortas()));
+        }
+
+        if (parede_3 != null) {
+            mViewHolder.layout_wall3.setVisibility(View.VISIBLE);
+            this.mViewHolder.layout_wall3_altura.setText(String.valueOf(parede_3.getAltura()));
+            this.mViewHolder.layout_wall3_largura.setText(String.valueOf(parede_3.getLargura()));
+            this.mViewHolder.layout_wall3_janelas.setText(String.valueOf(parede_3.getJanelas()));
+            this.mViewHolder.layout_wall3_portas.setText(String.valueOf(parede_3.getPortas()));
+        }
+
+        if (parede_4 != null) {
+            this.mViewHolder.layout_wall4_altura.setText(String.valueOf(parede_4.getAltura()));
+            this.mViewHolder.layout_wall4_largura.setText(String.valueOf(parede_4.getLargura()));
+            this.mViewHolder.layout_wall4_janelas.setText(String.valueOf(parede_4.getJanelas()));
+            this.mViewHolder.layout_wall4_portas.setText(String.valueOf(parede_4.getPortas()));
+            mViewHolder.layout_wall4.setVisibility(View.VISIBLE);
+            mViewHolder.button_calc.setVisibility(View.VISIBLE);
+            mViewHolder.button_add.setVisibility(View.GONE);
         }
     }
 

@@ -38,6 +38,9 @@ public class FormWall extends AppCompatActivity implements View.OnClickListener 
         this.mViewHolder.button_add.setOnClickListener(this);
         this.mViewHolder.button_return.setOnClickListener(this);
 
+        int numWall = Integer.parseInt(this.mData.getNumWalls()) + 1;
+        String text = "Parede " + numWall;
+        this.mViewHolder.text_title.setText(text);
     }
 
     @Override
@@ -63,6 +66,7 @@ public class FormWall extends AppCompatActivity implements View.OnClickListener 
                 String gsonWall = gson.toJson(wall);
 
                 this.mData.storieString("Wall_" + this.mData.getNumWalls(), gsonWall);
+                this.mData.setNumWalls(String.valueOf(Integer.parseInt(this.mData.getNumWalls()) + 1));
 
                 this.setResult(Activity.RESULT_OK, resultIntent);
                 this.finish();
