@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -52,24 +53,40 @@ public class FormWall extends AppCompatActivity implements View.OnClickListener 
             String portas = this.mViewHolder.edit_portas.getText().toString();
 
             if ("".equals(altura) || "".equals(largura) || "".equals(janelas) || "".equals(portas)) {
+                Toast.makeText(this, "Preencha todos os campos", Toast.LENGTH_LONG).show();
+
             } else {
-                Intent resultIntent = new Intent();
                 Double vAltura = Double.valueOf(altura);
                 Double vLargura = Double.valueOf(largura);
                 Integer vJanelas = Integer.valueOf(janelas);
                 Integer vPortas = Integer.valueOf(portas);
 
-                Gson gson = new Gson();
+                if (AreaParede(vAltura, vLargura) == true){
+                    Wall wall = new Wall(vAltura, vLargura, vPortas, vJanelas);
+                    if (ProporcaoArea(wall) == true){
+                        if (AlturaPermitida(wall) == true){
+                            Intent resultIntent = new Intent();
 
-                Wall wall = new Wall(vAltura, vLargura, vPortas, vJanelas);
+                            Gson gson = new Gson();
+                            String gsonWall = gson.toJson(wall);
 
-                String gsonWall = gson.toJson(wall);
+                            this.mData.storieString("Wall_" + this.mData.getNumWalls(), gsonWall);
+                            this.mData.setNumWalls(String.valueOf(Integer.parseInt(this.mData.getNumWalls()) + 1));
 
-                this.mData.storieString("Wall_" + this.mData.getNumWalls(), gsonWall);
-                this.mData.setNumWalls(String.valueOf(Integer.parseInt(this.mData.getNumWalls()) + 1));
-
-                this.setResult(Activity.RESULT_OK, resultIntent);
-                this.finish();
+                            this.setResult(Activity.RESULT_OK, resultIntent);
+                            this.finish();
+                        }
+                        else {
+                            Toast.makeText(this, "Esta parede não tem altura para porta", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                    else {
+                        Toast.makeText(this, "Esta parede não tem espaço para porta / janela", Toast.LENGTH_LONG).show();
+                    }
+                }
+                else {
+                    Toast.makeText(this, "A parede não pode ter menos que 1 m2 ou mais que 15 m2", Toast.LENGTH_LONG).show();
+                }
             }
         } else if (v.getId() == R.id.button_return) {
 
@@ -78,6 +95,39 @@ public class FormWall extends AppCompatActivity implements View.OnClickListener 
             this.finish();
         }
     }
+
+    public boolean ProporcaoArea (Wall wall){
+        Double areaParede = wall.getAltura() * wall.getLargura();
+        Double areaPorta = wall.getPortas() * 1.52;
+        Double areaJanela = wall.getJanelas() * 2.4;
+
+        if ((areaJanela + areaPorta) > (areaParede / 2)){
+
+            return false;
+        }
+        else return true;
+
+    }
+
+    public boolean AreaParede (Double altura, Double largura) {
+
+        Double area = altura * largura;
+
+        if (area >= 1 && area <= 15){
+            return true;
+        }
+        else return false;
+    }
+
+    public boolean AlturaPermitida (Wall wall){
+
+        if ((wall.getPortas() >= 0 && (wall.getAltura() -0.3) >= 1.90) || wall.getPortas() == 0){
+            return true;
+        }
+        else return false;
+    }
+
+
 
     private static class ViewHolder {
 

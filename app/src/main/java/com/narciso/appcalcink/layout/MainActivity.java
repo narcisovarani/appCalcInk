@@ -73,12 +73,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         this.mViewHolder.layout_wall4_largura = findViewById(R.id.layout_wall4_largura);
 
 
+        this.mViewHolder.layout_modal = findViewById(R.id.layout_modal);
+        this.mViewHolder.text_modalResult = findViewById(R.id.text_modalResult);
+        this.mViewHolder.button_closeModal = findViewById(R.id.button_closeModal);
+
         this.mViewHolder.button_add.setOnClickListener(this);
         this.mViewHolder.button_calc.setOnClickListener(this);
         this.mViewHolder.layout_wall1_header.setOnClickListener(this);
         this.mViewHolder.layout_wall2_header.setOnClickListener(this);
         this.mViewHolder.layout_wall3_header.setOnClickListener(this);
         this.mViewHolder.layout_wall4_header.setOnClickListener(this);
+
+        this.mViewHolder.button_closeModal.setOnClickListener(this);
+
 
         showWall();
 //        this.mViewHolder.room.getWall(0).setAltura(50.00);
@@ -93,7 +100,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             startActivityForResult(add, 37);
 
         } else if (v.getId() == R.id.layout_wall1_header) {
-            if (this.mViewHolder.layout_wall1_info.getVisibility() == View.VISIBLE){
+            if (this.mViewHolder.layout_wall1_info.getVisibility() == View.VISIBLE) {
                 this.mViewHolder.layout_wall1_info.setVisibility(View.GONE);
             } else {
                 this.mViewHolder.layout_wall1_info.setVisibility(View.VISIBLE);
@@ -103,7 +110,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             }
         } else if (v.getId() == R.id.layout_wall2_header) {
-            if (this.mViewHolder.layout_wall2_info.getVisibility() == View.VISIBLE){
+            if (this.mViewHolder.layout_wall2_info.getVisibility() == View.VISIBLE) {
                 this.mViewHolder.layout_wall2_info.setVisibility(View.GONE);
             } else {
                 this.mViewHolder.layout_wall2_info.setVisibility(View.VISIBLE);
@@ -111,9 +118,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 this.mViewHolder.layout_wall3_info.setVisibility(View.GONE);
                 this.mViewHolder.layout_wall4_info.setVisibility(View.GONE);
             }
-        }
-        else if (v.getId() == R.id.layout_wall3_header) {
-            if (this.mViewHolder.layout_wall3_info.getVisibility() == View.VISIBLE){
+        } else if (v.getId() == R.id.layout_wall3_header) {
+            if (this.mViewHolder.layout_wall3_info.getVisibility() == View.VISIBLE) {
                 this.mViewHolder.layout_wall3_info.setVisibility(View.GONE);
             } else {
                 this.mViewHolder.layout_wall3_info.setVisibility(View.VISIBLE);
@@ -121,9 +127,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 this.mViewHolder.layout_wall1_info.setVisibility(View.GONE);
                 this.mViewHolder.layout_wall4_info.setVisibility(View.GONE);
             }
-        }
-        else if (v.getId() == R.id.layout_wall4_header) {
-            if (this.mViewHolder.layout_wall4_info.getVisibility() == View.VISIBLE){
+        } else if (v.getId() == R.id.layout_wall4_header) {
+            if (this.mViewHolder.layout_wall4_info.getVisibility() == View.VISIBLE) {
                 this.mViewHolder.layout_wall4_info.setVisibility(View.GONE);
             } else {
                 this.mViewHolder.layout_wall4_info.setVisibility(View.VISIBLE);
@@ -131,8 +136,30 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 this.mViewHolder.layout_wall3_info.setVisibility(View.GONE);
                 this.mViewHolder.layout_wall1_info.setVisibility(View.GONE);
             }
-        }
+        } else if (v.getId() == R.id.button_calc) {
+            Gson gson = new Gson();
 
+            String parede1 = this.mData.getStoreString("Wall_0");
+            Wall p1 = gson.fromJson(parede1, Wall.class);
+
+            String parede2 = this.mData.getStoreString("Wall_1");
+            Wall p2 = gson.fromJson(parede2, Wall.class);
+
+            String parede3 = this.mData.getStoreString("Wall_2");
+            Wall p3 = gson.fromJson(parede3, Wall.class);
+
+            String parede4 = this.mData.getStoreString("Wall_3");
+            Wall p4 = gson.fromJson(parede4, Wall.class);
+
+            ConsumoTinta(p1, p2, p3, p4);
+
+
+        } else {
+            this.mViewHolder.layout_modal.setVisibility(View.GONE);
+            this.mData.setNumWalls("0");
+            Replay();
+
+        }
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -149,7 +176,41 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    public void ConsumoTinta(Wall wall_1, Wall wall_2, Wall wall_3, Wall wall_4) {
 
+        Double areaTotal = (wall_1.getAltura() * wall_1.getLargura());
+        areaTotal += (wall_2.getAltura() * wall_2.getLargura());
+        areaTotal += (wall_3.getAltura() * wall_3.getLargura());
+        areaTotal += (wall_4.getAltura() * wall_4.getLargura());
+
+        areaTotal -= (wall_1.getPortas() * 1.52) + (wall_1.getJanelas() * 2.4);
+        areaTotal -= (wall_2.getPortas() * 1.52) + (wall_2.getJanelas() * 2.4);
+        areaTotal -= (wall_3.getPortas() * 1.52) + (wall_3.getJanelas() * 2.4);
+        areaTotal -= (wall_4.getPortas() * 1.52) + (wall_4.getJanelas() * 2.4);
+
+        Double TintasNecessarias = areaTotal / 5.00;
+        Double[] latasTintas = {18.00, 3.6, 2.5, 0.5};
+        Integer[] latasNecessarias = {0, 0, 0, 0};
+
+        Double QtdAtual = TintasNecessarias;
+        Integer i = 0;
+
+        while (i <= 3) {
+            if (QtdAtual >= latasTintas[i]) {
+                QtdAtual = QtdAtual - latasTintas[i];
+
+                latasNecessarias[i]++;
+            } else i++;
+        }
+
+        while (QtdAtual >= 0.01) {
+            QtdAtual = QtdAtual - latasTintas[3];
+            latasNecessarias[3]++;
+        }
+
+        this.mViewHolder.text_modalResult.setText(String.format("%d Lata (s) de 18l\n %d Lata (s) de 3,6L\n %d Lata (s) de 2,5L\n %d Lata (s) de 0,5L", latasNecessarias[0], latasNecessarias[1], latasNecessarias[2], latasNecessarias[3]));
+        this.mViewHolder.layout_modal.setVisibility(View.VISIBLE);
+    }
 
     private void showWall() {
         Gson gson = new Gson();
@@ -200,12 +261,32 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    public void Replay() {
+        if (this.mData.getNumWalls() == "0") {
+            mViewHolder.layout_empty.setVisibility(View.VISIBLE);
+            mViewHolder.layout_room.setVisibility(View.GONE);
+
+            mViewHolder.layout_wall1.setVisibility(View.GONE);
+            mViewHolder.layout_wall2.setVisibility(View.GONE);
+            mViewHolder.layout_wall3.setVisibility(View.GONE);
+            mViewHolder.layout_wall4.setVisibility(View.GONE);
+
+            mViewHolder.button_calc.setVisibility(View.GONE);
+            mViewHolder.button_add.setVisibility(View.VISIBLE);
+        }
+
+    }
+
     private static class ViewHolder {
+
+        RelativeLayout layout_modal;
+        TextView text_modalResult;
 
         RelativeLayout layout_empty;
         RelativeLayout layout_room;
         Button button_add;
         Button button_calc;
+        Button button_closeModal;
 
         RelativeLayout layout_wall1;
         RelativeLayout layout_wall1_header;

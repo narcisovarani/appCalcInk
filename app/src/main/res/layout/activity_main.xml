@@ -788,14 +788,13 @@
                         android:textSize="20sp" />
 
                     <TextView
+                        android:id="@+id/text_modalResult"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_marginTop="30dp"
                         android:fontFamily="@font/black"
-                        android:text="1 lata de 18L + 2 latas de 0,5L"
+                        android:text=""
                         android:textSize="25sp" />
-
-
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -803,6 +802,7 @@
                     android:layout_height="80dp">
 
                     <Button
+                        android:id="@+id/button_closeModal"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:background="@drawable/bg_bottom_round"
